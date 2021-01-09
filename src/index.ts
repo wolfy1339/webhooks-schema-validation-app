@@ -1,8 +1,8 @@
-import { Probot, WebhookPayloadWithRepository } from 'probot';
-import { WebhookEvents } from '@octokit/webhooks';
+import type { Probot, WebhookPayloadWithRepository } from 'probot';
+import type { WebhookEvents } from '@octokit/webhooks';
 import Ajv from 'ajv';
 
-import * as webhooksSchema from '@octokit/webhooks-definitions/schema.json';
+import webhooksSchema from '@octokit/webhooks-definitions/schema.json';
 import type { components } from '@octokit/openapi-types';
 
 type GetRepoContentResponseDataFile = components["schemas"]["content-file"]
@@ -19,16 +19,16 @@ export = async (app: Probot) => {
         repo,
         path: ''
       })).data as GetRepoContentResponseDataFile;
-      editContentToFixSchema(content, result)
+      content = editContentToFixSchema(content, result)
       await context.octokit.repos.createOrUpdateFileContents({
         owner,
         repo,
         message: '',
-        content: content,
+        content,
         path: '',
         branch: 'shemas-update'
       });
-      const {data: { number }} = await context.octokit.pulls.create({
+      const { data: { number } } = await context.octokit.pulls.create({
         owner,
         repo,
         title: 'Update schemas',
@@ -63,4 +63,8 @@ function validateSchema(payload: WebhookPayloadWithRepository, event: WebhookEve
     hasErrors = true;
   }
   return { validated: hasErrors };
+}
+
+function editContentToFixSchema(content: string, _result: { validated: boolean; [key: string]: any }) {
+  return content
 }
