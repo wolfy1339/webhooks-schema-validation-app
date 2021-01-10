@@ -7,7 +7,7 @@ import type { components } from '@octokit/openapi-types';
 
 type GetRepoContentResponseDataFile = components["schemas"]["content-file"]
 
-export = async (app: Probot) => {
+export default async (app: Probot) => {
   app.on('*', async context => {
     const { payload, name } = context;
     const { owner, repo } = context.repo<{ owner: string, repo: string }>();
