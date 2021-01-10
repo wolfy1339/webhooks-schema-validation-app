@@ -4,7 +4,7 @@
   "private": true,
   "description": "A Probot app",
   "author": "wolfy1339 <webmaster@wolfy1339.com>",
-  "license": "ISC",
+  "license": "MIT",
   "repository": "https://github.com/wolfy1339/webhooks-schema-validation-app.git",
   "homepage": "https://github.com/wolfy1339/webhooks-schema-validation-app",
   "bugs": "https://github.com/wolfy1339/webhooks-schema-validation-app/issues",

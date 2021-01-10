@@ -33,4 +33,4 @@ For more, check out the [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
-[ISC](LICENSE) © 2021 wolfy1339 <webmaster@wolfy1339.com>
+[MIT](LICENSE) © 2021 wolfy1339 <webmaster@wolfy1339.com>
