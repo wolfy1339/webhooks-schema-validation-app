@@ -45,8 +45,9 @@ export default async (app: Probot) => {
   });
 };
 
-const ajv = new Ajv();
 function validateSchema(payload: WebhookPayloadWithRepository, event: WebhookEvents) {
+  const ajv = new Ajv();
+
   let hasErrors = false;
   try {
     const validationResult = ajv.validate<typeof webhooksSchema>(webhooksSchema, payload);
