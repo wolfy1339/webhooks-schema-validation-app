@@ -62,9 +62,9 @@ function validateSchema(payload: WebhookPayloadWithRepository, event: WebhookEve
     console.error('An error occured while validating the schemas', err.toString());
     hasErrors = true;
   }
-  return { validated: hasErrors };
+  return { validated: hasErrors, errors: ajv.errors };
 }
 
-function editContentToFixSchema(content: string, _result: { validated: boolean; [key: string]: any }) {
+function editContentToFixSchema(content: string, _result: { validated: boolean; errors: Ajv['errors'] }) {
   return content
 }
