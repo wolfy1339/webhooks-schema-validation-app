@@ -10,35 +10,34 @@ type GetRepoContentResponseDataFile = components["schemas"]["content-file"]
 export default async (app: Probot) => {
   app.on('*', async context => {
     const { payload, name } = context;
-    const { owner, repo } = context.repo<{ owner: string, repo: string }>();
+    const opts = {
+      repo: 'webhooks',
+      owner: 'octokit'
+    }
     const result = validateSchema(payload, name);
 
     if (!result.validated) {
       let { content } = (await context.octokit.repos.getContent({
-        owner,
-        repo,
+        ...opts,
         path: ''
       })).data as GetRepoContentResponseDataFile;
       content = editContentToFixSchema(content, result)
       await context.octokit.repos.createOrUpdateFileContents({
-        owner,
-        repo,
+        ...opts,
         message: '',
         content,
         path: '',
         branch: 'shemas-update'
       });
       const { data: { number } } = await context.octokit.pulls.create({
-        owner,
-        repo,
+        ...opts,
         title: 'Update schemas',
         body: '',
         base: 'master',
         head: 'schemas-update',
       });
       await context.octokit.issues.addLabels({
-        owner,
-        repo,
+        ...opts,
         issue_number: number,
         labels: ['maintenance']
       })
