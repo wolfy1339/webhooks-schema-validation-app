@@ -49,7 +49,7 @@ export default async (app: Probot) => {
   });
 };
 
-function validateSchema(payload: WebhookPayloadWithRepository, event: WebhookEvents) {
+function validateSchema(payload: WebhookPayloadWithRepository, event: WebhookEvents): { validated: true } | { validated: false; errors: ErrorObject<string, Record<string, any>, JSONSchema7>[] } {
   const ajv = new Ajv();
 
   let hasErrors = false;
@@ -66,7 +66,10 @@ function validateSchema(payload: WebhookPayloadWithRepository, event: WebhookEve
     console.error('An error occured while validating the schemas', err.toString());
     hasErrors = true;
   }
-  return { validated: hasErrors, errors: ajv.errors };
+  if (hasErrors) {
+    return { validated: false, errors: ajv.errors as ErrorObject<string, Record<string, any>, JSONSchema7>[] };
+  }
+  return { validated: true }
 }
 
 function editContentToFixSchema(content: string, _result: { validated: boolean; errors: Ajv['errors'] }) {
