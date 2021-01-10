@@ -16,31 +16,35 @@ export default async (app: Probot) => {
     }
     const result = validateSchema(payload, name);
 
-    if (!result.validated) {
-      let { content } = (await context.octokit.repos.getContent({
-        ...opts,
-        path: ''
-      })).data as GetRepoContentResponseDataFile;
-      content = editContentToFixSchema(content, result)
-      await context.octokit.repos.createOrUpdateFileContents({
-        ...opts,
-        message: '',
-        content,
-        path: '',
-        branch: 'shemas-update'
-      });
-      const { data: { number } } = await context.octokit.pulls.create({
-        ...opts,
-        title: 'Update schemas',
-        body: '',
-        base: 'master',
-        head: 'schemas-update',
-      });
-      await context.octokit.issues.addLabels({
-        ...opts,
-        issue_number: number,
-        labels: ['maintenance']
-      })
+    if (!result.validated && Array.isArray(result.errors)) {
+      try {
+        let { content } = (await context.octokit.repos.getContent({
+          ...opts,
+          path: ''
+        })).data as GetRepoContentResponseDataFile;
+        content = editContentToFixSchema(content, result)
+        await context.octokit.repos.createOrUpdateFileContents({
+          ...opts,
+          message: '',
+          content,
+          path: '',
+          branch: 'shemas-update'
+        });
+        const { data: { number } } = await context.octokit.pulls.create({
+          ...opts,
+          title: 'Update schemas',
+          body: '',
+          base: 'master',
+          head: 'schemas-update',
+        });
+        await context.octokit.issues.addLabels({
+          ...opts,
+          issue_number: number,
+          labels: ['maintenance']
+        })
+      } catch (e) {
+        // Handle errors
+      }
     }
   });
 };
