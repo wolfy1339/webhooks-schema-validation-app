@@ -1,6 +1,7 @@
 import type { Probot, WebhookPayloadWithRepository } from 'probot';
 import type { WebhookEvents } from '@octokit/webhooks';
 import Ajv, { ErrorObject } from 'ajv';
+import prettier from 'prettier';
 
 import webhooksSchema from '@octokit/webhooks-definitions/schema.json';
 import type { JSONSchema7, JSONSchema7Type } from 'json-schema';
@@ -147,5 +148,7 @@ function editContentToFixSchema(content: string, result: { validated: false; err
       }
     }
   })
-  return content
+  
+  // Return the schema that has been passed through prettier
+  return prettier.format(JSON.stringify(schema))
 }

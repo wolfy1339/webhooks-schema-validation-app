@@ -21,6 +21,7 @@
   "dependencies": {
     "@octokit/webhooks-definitions": "^3.31.0",
     "ajv": "^7.0.3",
+    "prettier": "^2.2.1",
     "probot": "^11.0.1"
   },
   "devDependencies": {
